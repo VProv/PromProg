@@ -1,0 +1,3 @@
+docker-compose up --build
+docker build ./producer -t producer
+docker run -it --rm --network=firsttask_default producer

@@ -12,7 +12,7 @@ client = MongoClient(host='mongo')
 client.drop_database('MDB')
 db = client[MDB]
 db.drop_collection('messages')
-
+print("CONSUMER START")
 # Set up logging
 handler = WatchedFileHandler("/apl/worker.log")
 log = logging.getLogger()
@@ -27,6 +27,7 @@ channel.queue_declare(queue='hello')
 def callback(ch, method, properties, body):
     log.info("Message received: {}".format(body))
     db.messages.save({str(body): str(body)})
+    print("message")
 
 
 channel.basic_consume(callback,
