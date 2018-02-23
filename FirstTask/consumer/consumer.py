@@ -4,14 +4,17 @@ import pymongo
 from logging.handlers import WatchedFileHandler
 from pymongo import MongoClient
 import time
-time.sleep(30)
-client = MongoClient('localhost')
-db = client.test_database
-posts = db.posts
 
+time.sleep(30)
+
+MDB = 'MDB'
+client = MongoClient(host='mongo')
+client.drop_database('MDB')
+db = client[MDB]
+db.drop_collection('messages')
 
 # Set up logging
-handler = WatchedFileHandler("/code/worker.log")
+handler = WatchedFileHandler("/apl/worker.log")
 log = logging.getLogger()
 log.addHandler(handler)
 logging.info('Consumer started')
@@ -23,8 +26,7 @@ channel.queue_declare(queue='hello')
 
 def callback(ch, method, properties, body):
     log.info("Message received: {}".format(body))
-    post = {str(body): str(body)}
-    posts.insert_one(post)
+    db.messages.save({str(body): str(body)})
 
 
 channel.basic_consume(callback,

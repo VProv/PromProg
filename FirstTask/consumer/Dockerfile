@@ -1,7 +1,5 @@
 FROM python:3.6
-WORKDIR /code
-ADD . /code
+ADD . /apl
+WORKDIR /apl
 RUN pip install -r requirements.txt
-ENV PATH=$PATH:/
-ENV PYTHONPATH /
-CMD ["python", "./consumer.py"]
+CMD ["python", "consumer.py"]

@@ -5,8 +5,6 @@ services:
   rabbitmq:
     image: rabbitmq:3-management
     restart: always
-    networks:
-    - rabbitmq_net
     ports:
     - 5672:5672
     - 15672:15672
@@ -15,30 +13,13 @@ services:
   mongo:
     image: mongo
     restart: always
-#    environment:
-#      MONGA_USER: guest
-#      MONGA_PASSWORD: guest
-    networks:
-    - rabbitmq_net
+    ports:
+    - 27017:27017
     
   consumer:
     build: consumer
-    restart: always
-    networks:
-    - rabbitmq_net
-    command: python consumer.py
-    depends_on:
-      - mongo
-      - rabbitmq
-    
-  producer:
-    build: producer
-    restart: always
-    networks:
-    - rabbitmq_net
-    command: python producer.py
-    stdin_open: true
-    tty: true
-    
-networks:
-  rabbitmq_net:
+    restart: on-failure
+    volumes:
+    - ./consumer:/apl
+    links:
+    - rabbitmq
