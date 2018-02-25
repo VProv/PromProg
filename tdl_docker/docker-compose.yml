@@ -1,0 +1,24 @@
+version: '3.1'
+
+services:
+
+  app:
+    build: djangotdl
+    command: bash -c "sleep 30 && python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+#    networks:
+#      - backend
+ 
+  db:
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=test
+      - MYSQL_DATABASE=test
+#    networks:
+#      - backend
+
+#networks:
+#  backend: 
